@@ -39,7 +39,7 @@ public class UserController {
     private Integer userRating;
     private List<Comment> commentList;
 
-    @RequestMapping
+    @GetMapping("/")
     public String index(Model model) {
         scoreList = scoreService.getTopScores("lightsoff");
         averageRating = ratingService.getAverageRating("lightsoff");
@@ -59,13 +59,13 @@ public class UserController {
         return "index";
     }
 
-    @RequestMapping(value = "/level", method = RequestMethod.POST)
+    @PostMapping("/level")
     public String getLevel(String level) {
         loggedPlayer.setLevel(Integer.parseInt(level));
         return "redirect:/lightsoff/new";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @GetMapping("/login")
     public String loginPage(Model model) {
         Player player = new Player();
         model.addAttribute("isLogged", isLogged());
@@ -75,7 +75,7 @@ public class UserController {
         return "login";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @PostMapping("/login")
     public String loginProcess(@ModelAttribute("player") Player player) {
         Player dbPlayer = playerService.getPlayerByNickname(player.getNickname());
         if(dbPlayer != null) {
@@ -89,7 +89,7 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    @GetMapping("/register")
     public String register(Model model) {
         Player player = new Player();
         model.addAttribute("isLogged", isLogged());
@@ -99,7 +99,7 @@ public class UserController {
         return "register";
     }
 
-    @RequestMapping(value = "/register/new", method = RequestMethod.POST)
+    @PostMapping("/register/new")
     public String newPlayer(@ModelAttribute("player") Player player) {
         if(playerService.getPlayerByNickname(player.getNickname()) != null) {
             userExist = true;
