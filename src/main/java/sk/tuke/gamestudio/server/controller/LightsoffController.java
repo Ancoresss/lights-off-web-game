@@ -44,13 +44,13 @@ public class LightsoffController {
 
     @GetMapping
     public String startGame(@RequestParam(required = false) String row, @RequestParam(required = false) String column, Model model) {
-//         if(userController.getLoggedPlayer() == null) {
-//             return "error";
-//         } else if(userController.getLoggedPlayer() != null && player == null) {
-//             model.addAttribute("messageError", "This will not work. You have to start new game.");
-//             return "error";
-//         }
-//         if(userController.isLogged() && userController.getLoggedPlayer().getNickname().equals(player.getNickname())) {
+        if(userController.getLoggedPlayer() == null) {
+            return "error";
+        } else if(userController.getLoggedPlayer() != null && player == null) {
+            model.addAttribute("messageError", "This will not work. You have to start new game.");
+            return "error";
+        }
+        if(userController.isLogged() && userController.getLoggedPlayer().getNickname().equals(player.getNickname())) {
             if(statusGame == StatusGame.PLAYING) {
                 if(row != null && column != null) {
                     logic.switchStars(field, Integer.parseInt(row), Integer.parseInt(column), consoleUI.getColumns());
@@ -67,11 +67,10 @@ public class LightsoffController {
             model.addAttribute("statusGame", statusGame);
             model.addAttribute("player", player);
             return "game";
-//         } 
-//         else {
-//             model.addAttribute("messageError", "This will not work. You have to start new game.");
-//             return "error";
-//         }
+        } else {
+            model.addAttribute("messageError", "This will not work. You have to start new game.");
+            return "error";
+        }
     }
 
     @GetMapping("/new")
@@ -79,15 +78,15 @@ public class LightsoffController {
         moves = -1;
         statusGame = StatusGame.PLAYING;
         player = userController.getLoggedPlayer();
-//         if(userController.isLogged()) {
+        if(userController.isLogged()) {
             consoleUI.convertLevel(player.getLevel());
             model.addAttribute("player", player);
             field = logic.generateField();
             return "redirect:/lightsoff";
-//         } 
-//         else {
-//             return "error";
-//         }
+        } 
+        else {
+            return "error";
+        }
     }
 
     @PostMapping("/review")
