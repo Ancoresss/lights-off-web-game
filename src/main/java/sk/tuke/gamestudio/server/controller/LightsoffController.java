@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
 import sk.tuke.gamestudio.entity.Comment;
 import sk.tuke.gamestudio.entity.Player;
@@ -44,7 +42,7 @@ public class LightsoffController {
     private StatusGame statusGame = StatusGame.PLAYING;
     public static int moves;
 
-    @RequestMapping
+    @GetMapping
     public String startGame(@RequestParam(required = false) String row, @RequestParam(required = false) String column, Model model) {
         if(userController.getLoggedPlayer() == null) {
             return "error";
@@ -75,7 +73,7 @@ public class LightsoffController {
         }
     }
 
-    @RequestMapping(value = "/new")
+    @GetMapping("/new")
     public String newGame(Model model) {
         moves = -1;
         statusGame = StatusGame.PLAYING;
@@ -90,7 +88,7 @@ public class LightsoffController {
         }
     }
 
-    @RequestMapping(value = "/review", method = RequestMethod.POST)
+    @PostMapping("/review")
     public String review(String rate, String comment) {
         scoreService.addScore(new Score("lightsoff", player.getNickname(), 101 - moves, player.getLevel(), new Date()));
         ratingService.setRating(new Rating("lightsoff", player.getNickname(), Integer.parseInt(rate), new Date()));
