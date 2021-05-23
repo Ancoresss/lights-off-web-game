@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Game</title>
+    <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;500;700&amp;display=swap" rel="stylesheet">
+</head>
+<body>
+    <div th:if="${@userController.logged}" id="loggedAs">
+        <div>Go to the <a href="/">main</a> page (your game will be lost)</div>
+        <div>
+            <span>
+                Logged as: <b><span th:text="${player.getNickname()}"></span></b>
+            </span><br>
+            <a href="/logout" class="btn-manager game-btn">Log out</a>
+        </div>
+    </div>
+    <p th:if="${statusGame.toString() == 'PLAYING'}" th:utext="${@lightsoffController.htmlField}"></p>
+    <div th:if="not ${statusGame.toString() == 'PLAYING'}" class="leave-form">
+        <b><p th:text="${messageGame}" id="game-end-message"></p></b>
+        <form th:method="POST" action="/lightsoff/review">
+            <label for="rate">Leave your review for Game Studio:</label>
+            <input type="number" id="rate" min="1" max="5" name="rate" required><br>
+            <label for="comment" id="game-comment-label">Leave a comment for Game Studio:</label>
+            <textarea id="comment" name="comment" cols="30" rows="6" required></textarea><br>
+            <button type="submit" class="btn-manager game-send">Send and quit</button>
+        </form>
+    </div>
+    <div th:if="${statusGame.toString() == 'PLAYING'}" class="btn-new_game">
+        <div>Moves: <span th:text="${moves}"></span></div>
+        <a href="/lightsoff/new" class="btn-manager">New Game</a>
+    </div>
+</body>
+</html>

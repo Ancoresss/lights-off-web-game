@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/style.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <form th:method="POST" th:action="@{/register/new}" th:object="${player}" class="ui-form">
+        <div th:if="${isLogged}" class="already-login">
+            <h3>You have to logout, for new registration.</h3>
+            <a href="/logout" class="btn-manager">Log out</a>
+        </div>
+        <div th:if="not ${isLogged}">
+            <h3>Fill out the form to registration</h3>
+            <div class="form-row">
+                <input type="text" id="nickname" th:field="*{nickname}" required autocomplete="off"><label for="nickname">Enter the nickname:</label>
+            </div>
+            <div class="form-row">
+                <input type="password" id="password" th:field="*{password}" required autocomplete="off"><label for="password">Enter the password:</label>
+            </div>
+            <p th:if="${isUserExist} == true" id="error-exist">User already exist</p>
+            <button type="submit">Register</button>
+        </div>
+    </form>
+    <script type="text/javascript" th:src="@{/js/register.js}"></script>
+</body>
+</html>

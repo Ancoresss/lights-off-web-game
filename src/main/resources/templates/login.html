@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in</title>
+    <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;500;700&amp;display=swap" rel="stylesheet">
+</head>
+<body>
+    <form th:method="POST" th:action="@{/login}" th:object="${player}" class="ui-form">
+        <div th:if="${isLogged}" class="already-login">
+            <h3>You are already login!</h3>
+            <a href="/logout" class="btn-manager">Log out</a>
+        </div>
+        <div th:if="not ${isLogged}">
+            <h3>Come in and play!</h3>
+            <div class="form-row">
+                <input type="text" id="nickname" th:field="*{nickname}" required autocomplete="off"><label for="nickname">Enter the nickname:</label>
+            </div>
+            <div class="form-row">
+                <input type="password" id="password" th:field="*{password}" required autocomplete="off"><label for="password">Enter the password:</label>
+            </div>
+            <p th:if="${isValidUser} == false" id="error-exist">You have entered incorrect data</p>
+            <button type="submit">Log in</button>
+        </div>
+    </form>
+</body>
+</html>

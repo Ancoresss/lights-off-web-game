@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="../static/css/styles.css" th:href="@{/css/style.css}">
+    <!----- Fonts ----->
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;500;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Welcome to the Game Studio!</h1>
+    <div class="index-main_block">
+        <div th:if="not ${@userController.logged}" id="index-not_login_user">
+            <div>You are not log in. Please, <a href="/login">log in</a> or <a href="/register">register</a>.</div>
+        </div>
+        <div th:if="${@userController.logged}">
+            <div class="log-info">You are logged as: <b><span th:text="${player.getNickname()}"></span></b><br></div>
+            <span>Our games (click on the game to play):</span><br>
+            <ul class="gameList">
+                <li><a href="#">Lights off</a></li>
+            </ul>
+            <br>
+            <div id="askLevel">
+                <form th:method="POST" action="/level">
+                    <label for="level">Enter level of the game:</label>
+                    <input type="number" name="level" min="1" max="3" id="level" required>
+                    <button type="submit" class="btn-manager">Start the game</button>
+                </form>
+            </div>
+            <a href="/logout" class="btn-manager">Log out</a>
+            <a href="/delete" class="btn-manager">Delete account</a>
+        </div>
+    </div>
+    <div>
+        <div id="ratingSpan">
+            Average rate for the game is: <p th:text="${averageRating}"></p>/5<br>
+            <span th:if="${userRating != null and isLogged}">Your rate is: <span th:text="${userRating}"></span></span>
+        </div>
+        <table id="tableJQueryDataScore" class="dynamicTable">
+            <caption>Top scores from all players</caption>
+            <thead>
+            <th>Player</th>
+            <th>Points</th>
+            <th>Level</th>
+            <th>Played at</th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <table id="tableJQueryDataComment" class="dynamicTable">
+            <caption>Comments from all players</caption>
+            <thead>
+            <th>Player</th>
+            <th>Comment</th>
+            <th>Commented at</th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="rules">
+        <div>You can <a href="rules_en.html" target="_blank">read the rules</a> for the game<br></div>
+        <div>Feel free to report <a href="https://forms.gle/gKz1UkA2o3YBRbRH9" target="_blank">here</a>, if you have any problems</div>
+    </div>
+    <script type="text/javascript" th:src="@{/js/index.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.24/dataRender/datetime.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.fn.dataTable.render.moment = function ( from, to, locale ) {
+                if ( arguments.length === 1 ) {
+                    locale = 'en';
+                    to = from;
+                    from = 'YYYY-MM-DD';
+                }
+                else if ( arguments.length === 2 )
+                    locale = 'en';
+                return function ( d, type, row ) {
+                    if (! d)
+                        return type === 'sort' || type === 'type' ? 0 : d;
+                    var m = window.moment( d, from, locale, true );
+                    return m.format( type === 'sort' || type === 'type' ? 'x' : to );
+                };
+            }
+           $('#tableJQueryDataComment').DataTable({
+               columns: [
+                   {data: "player"},
+                   {data: "comment"},
+                   {data: "commentedOn"}
+               ],
+               ajax: {url: "/api/comment/lightsoff", dataSrc: ''},
+               columnDefs: [{
+                   render: function (data, type, row) {
+                       return moment(data).format('DD-MM-YYYY | HH:MM:SS');
+                   },
+                   targets: 2
+               }],
+               order: [2, 'desc']
+           });
+            $('#tableJQueryDataScore').DataTable({
+                columns: [
+                    {data: "player"},
+                    {data: "points"},
+                    {data: "level"},
+                    {data: "playedAt"}
+                ],
+                ajax: {url: "/api/score/lightsoff", dataSrc: ''},
+                columnDefs: [{
+                    render: function (data, type, row) {
+                        return moment(data).format('DD-MM-YYYY | HH:MM:SS');
+                    },
+                    targets: 3
+                }],
+                order: [1, 'desc']
+            });
+        });
+    </script>
+</body>
+</html>
