@@ -50,7 +50,7 @@ public class LightsoffController {
 //             model.addAttribute("messageError", "This will not work. You have to start new game.");
 //             return "error";
 //         }
-        if(userController.isLogged() && userController.getLoggedPlayer().getNickname().equals(player.getNickname())) {
+//         if(userController.isLogged() && userController.getLoggedPlayer().getNickname().equals(player.getNickname())) {
             if(statusGame == StatusGame.PLAYING) {
                 if(row != null && column != null) {
                     logic.switchStars(field, Integer.parseInt(row), Integer.parseInt(column), consoleUI.getColumns());
@@ -67,7 +67,7 @@ public class LightsoffController {
             model.addAttribute("statusGame", statusGame);
             model.addAttribute("player", player);
             return "game";
-        } 
+//         } 
 //         else {
 //             model.addAttribute("messageError", "This will not work. You have to start new game.");
 //             return "error";
@@ -79,12 +79,12 @@ public class LightsoffController {
         moves = -1;
         statusGame = StatusGame.PLAYING;
         player = userController.getLoggedPlayer();
-        if(userController.isLogged()) {
+//         if(userController.isLogged()) {
             consoleUI.convertLevel(player.getLevel());
             model.addAttribute("player", player);
             field = logic.generateField();
             return "redirect:/lightsoff";
-        } 
+//         } 
 //         else {
 //             return "error";
 //         }
