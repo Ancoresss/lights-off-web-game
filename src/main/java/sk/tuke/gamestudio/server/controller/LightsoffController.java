@@ -42,7 +42,7 @@ public class LightsoffController {
     private StatusGame statusGame = StatusGame.PLAYING;
     public static int moves;
 
-    @GetMapping
+    @GetMapping()
     public String startGame(@RequestParam(required = false) String row, @RequestParam(required = false) String column, Model model) {
         if(userController.getLoggedPlayer() == null) {
             return "error";
@@ -83,8 +83,7 @@ public class LightsoffController {
             model.addAttribute("player", player);
             field = logic.generateField();
             return "redirect:/lightsoff";
-        } 
-        else {
+        } else {
             return "error";
         }
     }
