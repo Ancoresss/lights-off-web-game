@@ -25,8 +25,13 @@ public class RatingServiceJPA implements RatingService {
 
     @Override
     public int getAverageRating(String game) throws RatingException {
-        double rating = (double) entityManager.createNamedQuery("Rating.getAverageRating")
-                .setParameter("game", game).getSingleResult();
+        double rating;
+        try {
+            rating = (double) entityManager.createNamedQuery("Rating.getAverageRating")
+                    .setParameter("game", game).getSingleResult();
+        } catch (NullPointerException e) {
+            return 0;
+        }
         return (int) Math.round(rating);
     }
 
